@@ -58,7 +58,7 @@ fun main() {
 
   fun part2() {
     updates
-        .filterNot { update -> rules.all { rule -> updateObeysRule(update, rule) } }
+        .filter { update -> rules.any { rule -> !updateObeysRule(update, rule) } }
         .map { iterativelyFix(it) }
         .sumOf { midpoint(it) }
         .println()
