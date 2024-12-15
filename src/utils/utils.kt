@@ -18,3 +18,35 @@ fun <T> List<List<T>>.transpose(): List<List<T>> {
     }
     return result
 }
+
+enum class Direction {
+    UP, DOWN, LEFT, RIGHT, UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT;
+
+    fun opposite(): Direction {
+        return when (this) {
+            UP -> DOWN
+            DOWN -> UP
+            LEFT -> RIGHT
+            RIGHT -> LEFT
+            UP_LEFT -> DOWN_RIGHT
+            UP_RIGHT -> DOWN_LEFT
+            DOWN_LEFT -> UP_RIGHT
+            DOWN_RIGHT -> UP_LEFT
+        }
+    }
+}
+
+data class Point(val x: Int, val y: Int) {
+    fun move(direction: Direction): Point {
+        return when (direction) {
+            Direction.UP -> copy(y = y - 1)
+            Direction.DOWN -> copy(y = y + 1)
+            Direction.LEFT -> copy(x = x - 1)
+            Direction.RIGHT -> copy(x = x + 1)
+            Direction.UP_LEFT -> copy(x = x - 1, y = y - 1)
+            Direction.UP_RIGHT -> copy(x = x + 1, y = y - 1)
+            Direction.DOWN_LEFT -> copy(x = x - 1, y = y + 1)
+            Direction.DOWN_RIGHT -> copy(x = x + 1, y = y + 1)
+        }
+    }
+}
