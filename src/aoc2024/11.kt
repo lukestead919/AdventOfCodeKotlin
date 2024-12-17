@@ -16,11 +16,12 @@ fun Long.nextStones(): List<Long> =
         else -> listOf(this * 2024)
     }
 
-val stonesMap = mutableMapOf<Pair<Long, Int>, Long>()
+private val numberOfStonesCache = mutableMapOf<Pair<Long, Int>, Long>()
 
 fun Long.countStonesAfter(generationsRemaining: Int): Long {
     if (generationsRemaining == 0) return 1
-    return stonesMap.getOrPut(this to generationsRemaining) {
+
+    return numberOfStonesCache.getOrPut(this to generationsRemaining) {
         nextStones().sumOf { it.countStonesAfter(generationsRemaining - 1) }
     }
 }
