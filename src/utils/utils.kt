@@ -44,6 +44,8 @@ fun <T> MutableList<T>.swap(index1: Int, index2: Int) {
     this[index2] = tmp
 }
 
+fun <T> T.iterate(times: Int, action: (T) -> T): T = (1..times).fold(this) { acc, _ -> action(acc) }
+
 enum class Direction {
     UP,
     DOWN,
