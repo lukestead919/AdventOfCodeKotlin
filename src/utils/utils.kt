@@ -20,6 +20,13 @@ fun <T> List<List<T>>.transpose(): List<List<T>> {
     return result
 }
 
+fun List<String>.asGrid(
+    splitRow: (String) -> List<String> = { it.map { it.toString() } }
+): Map<Point, String> {
+    return flatMapIndexed { y, row -> splitRow(row).mapIndexed { x, char -> Point(x, y) to char } }
+        .associate { it }
+}
+
 fun <T> List<T>.combinations(size: Int): List<List<T>> {
     if (size == 0) return listOf(emptyList())
     if (size == 1) return map { listOf(it) }
@@ -87,6 +94,14 @@ data class Point(val x: Int, val y: Int) {
             Direction.DOWN_RIGHT -> copy(x = x + 1, y = y + 1)
         }
     }
+
+    fun orthogonalNeighbors(): List<Point> =
+        listOf(
+            move(Direction.UP),
+            move(Direction.RIGHT),
+            move(Direction.DOWN),
+            move(Direction.LEFT),
+        )
 
     operator fun plus(other: Point) = Point(x + other.x, y + other.y)
 
