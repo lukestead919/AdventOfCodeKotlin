@@ -31,6 +31,12 @@ fun <T> List<T>.permutations(size: Int): List<List<T>> {
     return flatMap { t -> minusElement(t).permutations(size - 1).map { it + t } }
 }
 
+fun <T> MutableList<T>.swap(index1: Int, index2: Int) {
+    val tmp = this[index1]
+    this[index1] = this[index2]
+    this[index2] = tmp
+}
+
 enum class Direction {
     UP,
     DOWN,

@@ -30,16 +30,15 @@ fun main() {
     fun part2() {
         antennaPairs
             .flatMap { (antenna1, antenna2) ->
-                val testing = mutableListOf<Point>()
+                val antinodes = mutableListOf<Point>()
                 val distanceVector = antenna2 - antenna1
                 var node = antenna2
                 do {
-                    testing.add(node)
+                    antinodes.add(node)
                     node += distanceVector
                 } while (node in validPoints)
-                testing
+                antinodes
             }
-            .filter { it in validPoints }
             .toSet()
             .size
             .println()
