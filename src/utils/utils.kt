@@ -20,6 +20,12 @@ fun <T> List<List<T>>.transpose(): List<List<T>> {
     return result
 }
 
+fun <T> List<T>.combinations(size: Int): List<List<T>> {
+    if (size == 0) return listOf(emptyList())
+    if (size == 1) return map { listOf(it) }
+    return flatMap { t -> combinations(size - 1).map { it + t } }
+}
+
 enum class Direction {
     UP,
     DOWN,
