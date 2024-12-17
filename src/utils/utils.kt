@@ -26,6 +26,11 @@ fun <T> List<T>.combinations(size: Int): List<List<T>> {
     return flatMap { t -> combinations(size - 1).map { it + t } }
 }
 
+fun <T> List<T>.permutations(size: Int): List<List<T>> {
+    if (size == 0) return listOf(emptyList())
+    return flatMap { t -> minusElement(t).permutations(size - 1).map { it + t } }
+}
+
 enum class Direction {
     UP,
     DOWN,
@@ -76,4 +81,10 @@ data class Point(val x: Int, val y: Int) {
             Direction.DOWN_RIGHT -> copy(x = x + 1, y = y + 1)
         }
     }
+
+    operator fun plus(other: Point) = Point(x + other.x, y + other.y)
+
+    operator fun minus(other: Point) = Point(x - other.x, y - other.y)
+
+    operator fun times(scalar: Int) = Point(x * scalar, y * scalar)
 }
