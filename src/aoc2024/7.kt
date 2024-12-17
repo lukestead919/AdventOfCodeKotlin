@@ -39,7 +39,7 @@ fun main() {
         }
 
     fun getSumOfValidEquationsUsingOperators(operators: List<Operator>): Long {
-        return input.filter { it.canBeSolvedUsing(operators) }.map { it.left }.sum()
+        return input.filter { it.canBeSolvedUsing(operators) }.sumOf { it.left }
     }
 
     fun part1() {
