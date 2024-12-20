@@ -20,6 +20,21 @@ fun <T> List<List<T>>.transpose(): List<List<T>> {
     return result
 }
 
+fun <T> List<T>.split(predicate: (T) -> Boolean): List<List<T>> {
+    val result = mutableListOf<MutableList<T>>()
+    var currentList = mutableListOf<T>()
+    for (element in this) {
+        if (predicate(element)) {
+            result.add(currentList)
+            currentList = mutableListOf()
+        } else {
+            currentList.add(element)
+        }
+    }
+    result.add(currentList)
+    return result
+}
+
 fun List<String>.asGrid(
     splitRow: (String) -> List<String> = { it.map { it.toString() } }
 ): Grid<String> {
