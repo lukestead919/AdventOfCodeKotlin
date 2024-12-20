@@ -68,6 +68,16 @@ fun <T> MutableList<T>.swap(index1: Int, index2: Int) {
 
 fun <T> T.iterate(times: Int, action: (T) -> T): T = (1..times).fold(this) { acc, _ -> action(acc) }
 
+fun <T> T.iterateUntilStable(action: (T) -> T): T {
+    var current = this
+    var next = action(current)
+    while (current != next) {
+        current = next
+        next = action(current)
+    }
+    return current
+}
+
 enum class Direction {
     UP,
     DOWN,
