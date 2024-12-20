@@ -2,6 +2,7 @@ package utils
 
 import kotlin.io.path.Path
 import kotlin.io.path.readText
+import kotlin.math.absoluteValue
 
 fun readInput(year: String, name: String) =
     Path("src/aoc$year/DataFiles/$name.txt").readText().trim().lines()
@@ -149,6 +150,9 @@ data class Point(val x: Int, val y: Int) {
             move(Direction.DOWN),
             move(Direction.LEFT),
         )
+
+    fun manhattanDistance(other: Point): Int =
+        (x - other.x).absoluteValue + (y - other.y).absoluteValue
 
     operator fun plus(other: Point) = Point(x + other.x, y + other.y)
 
