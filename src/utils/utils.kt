@@ -22,9 +22,10 @@ fun <T> List<List<T>>.transpose(): List<List<T>> {
 
 fun List<String>.asGrid(
     splitRow: (String) -> List<String> = { it.map { it.toString() } }
-): Map<Point, String> {
+): Grid<String> {
     return flatMapIndexed { y, row -> splitRow(row).mapIndexed { x, char -> Point(x, y) to char } }
         .associate { it }
+        .let(::Grid)
 }
 
 fun <T> List<T>.combinations(size: Int): List<List<T>> {
@@ -110,4 +111,22 @@ data class Point(val x: Int, val y: Int) {
     operator fun minus(other: Point) = Point(x - other.x, y - other.y)
 
     operator fun times(scalar: Int) = Point(x * scalar, y * scalar)
+}
+
+data class Grid<T>(val grid: Map<Point, T>) : Map<Point, T> by grid {
+    val points: Set<Point> = grid.keys
+
+    fun print() {
+        val xRange = points.map { it.x }.let { it.minOrNull()!!..it.maxOrNull()!! }
+        val yRange = points.map { it.y }.let { it.minOrNull()!!..it.maxOrNull()!! }
+        for (y in yRange) {
+            for (x in xRange) {
+                print(getOrDefault(Point(x, y), ' '))
+            }
+            println()
+        }
+    }
+
+    fun orthogonalNeighbors(point: Point): List<Point> =
+        point.orthogonalNeighbors().filter { it in points }
 }
