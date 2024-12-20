@@ -103,6 +103,19 @@ enum class Direction {
             DOWN_RIGHT -> DOWN_LEFT
         }
     }
+
+    fun turnLeft(): Direction {
+        return when (this) {
+            UP -> LEFT
+            DOWN -> RIGHT
+            LEFT -> DOWN
+            RIGHT -> UP
+            UP_LEFT -> DOWN_LEFT
+            UP_RIGHT -> UP_LEFT
+            DOWN_LEFT -> DOWN_RIGHT
+            DOWN_RIGHT -> UP_RIGHT
+        }
+    }
 }
 
 data class Point(val x: Int, val y: Int) {
