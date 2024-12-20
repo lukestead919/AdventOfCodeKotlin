@@ -31,7 +31,7 @@ fun main() {
         start: Point,
         group: MutableSet<Point> = mutableSetOf(start),
     ): MutableSet<Point> {
-        val neighbors = grid.orthogonalNeighbors(start).filter { it in grid }
+        val neighbors = grid.orthogonalNeighbors(start)
         val plotValue = grid.getValue(start)
         neighbors.forEach {
             if (grid.getValue(it) == plotValue && it !in group) {
