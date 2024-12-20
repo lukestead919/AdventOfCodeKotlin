@@ -27,7 +27,6 @@ fun Set<Point>.sides(): Int =
 fun main() {
     val grid = read2024Input("12").asGrid()
 
-    //    fun group
     fun buildGroup(
         start: Point,
         group: MutableSet<Point> = mutableSetOf(start),
@@ -38,7 +37,6 @@ fun main() {
             if (grid.getValue(it) == plotValue && it !in group) {
                 group.add(it)
                 buildGroup(it, group)
-                //                it.println()
             }
         }
         return group
@@ -53,7 +51,6 @@ fun main() {
             if (notYetGrouped.isEmpty()) break
 
             val point = notYetGrouped.keys.first()
-            //            point.println()
             val nextGroup = buildGroup(point)
             groups.add(nextGroup)
         }
