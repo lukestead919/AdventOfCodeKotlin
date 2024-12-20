@@ -43,6 +43,12 @@ fun List<String>.asGrid(
         .let(::Grid)
 }
 
+fun <T> List<List<T>>.asGrid(): Grid<T> {
+    return flatMapIndexed { y, row -> row.mapIndexed { x, char -> Point(x, y) to char } }
+        .associate { it }
+        .let(::Grid)
+}
+
 fun <T> List<T>.combinations(size: Int): List<List<T>> {
     if (size == 0) return listOf(emptyList())
     if (size == 1) return map { listOf(it) }
@@ -131,14 +137,14 @@ data class Point(val x: Int, val y: Int) {
 data class Grid<T>(val grid: Map<Point, T>) : Map<Point, T> by grid {
     val points: Set<Point> = grid.keys
 
-    fun print() {
+    fun print(display: (T) -> String = { it.toString() }) {
         val xRange = points.map { it.x }.let { it.minOrNull()!!..it.maxOrNull()!! }
         val yRange = points.map { it.y }.let { it.minOrNull()!!..it.maxOrNull()!! }
         for (y in yRange) {
             for (x in xRange) {
-                print(getOrDefault(Point(x, y), ' '))
+                print(get(Point(x, y))?.let { display(it) } ?: " ")
             }
-            println()
+            kotlin.io.println()
         }
     }
 

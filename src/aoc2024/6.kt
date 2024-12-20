@@ -48,7 +48,7 @@ fun Board.playerPosition(): Point? {
     return entries.find { it.value == Piece.PLAYER }?.key
 }
 
-data class State(
+private data class State(
     val board: Board,
     val playerPosition: Point?,
     val direction: Direction,

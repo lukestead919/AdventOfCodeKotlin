@@ -15,9 +15,9 @@ fun <T> MutableList<T?>.defrag(): List<T?> {
     return defrag()
 }
 
-data class Chunk(val size: Int, val value: Int?)
+private data class Chunk(val size: Int, val value: Int?)
 
-fun MutableList<Chunk>.defragChunks(fileIndex: Int): List<Chunk> {
+private fun MutableList<Chunk>.defragChunks(fileIndex: Int): List<Chunk> {
     if (fileIndex == 0) {
         return this.toList()
     }
@@ -54,7 +54,7 @@ fun MutableList<Chunk>.defragChunks(fileIndex: Int): List<Chunk> {
     return defragChunks(fileIndex - 1)
 }
 
-fun List<Chunk>.expand(): List<Int> {
+private fun List<Chunk>.expand(): List<Int> {
     return flatMap { chunk -> List(chunk.size) { chunk.value ?: 0 } }
 }
 

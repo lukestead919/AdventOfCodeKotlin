@@ -3,7 +3,7 @@ package aoc2024
 import utils.combinations
 import utils.println
 
-enum class Operator {
+private enum class Operator {
     ADD,
     MUL,
     CONCAT;
@@ -17,7 +17,7 @@ enum class Operator {
     }
 }
 
-data class Equation(val left: Long, val right: List<Long>) {
+private data class Equation(val left: Long, val right: List<Long>) {
 
     fun canBeSolvedUsing(operators: List<Operator>): Boolean {
         val operationCombinations = operators.combinations(right.size - 1)
