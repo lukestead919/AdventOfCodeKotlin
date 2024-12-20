@@ -158,6 +158,16 @@ data class Point(val x: Int, val y: Int) {
 }
 
 data class Grid<T>(val grid: Map<Point, T>) : Map<Point, T> by grid {
+    constructor(
+        x: Int,
+        y: Int,
+        valueGetter: (Point) -> T,
+    ) : this(
+        (0..<x)
+            .flatMap { x -> (0..<y).map { y -> Point(x, y) to valueGetter(Point(x, y)) } }
+            .toMap()
+    )
+
     val points: Set<Point> = grid.keys
 
     fun print(display: (T) -> String = { it.toString() }) {
