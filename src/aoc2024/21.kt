@@ -1,10 +1,7 @@
 package aoc2024
 
 import aoc2024.DirectionPadCode.*
-import utils.Direction
-import utils.Grid
-import utils.Point
-import utils.println
+import utils.*
 
 private enum class DirectionPadCode {
     UP,
@@ -115,9 +112,6 @@ fun main() {
                 moves.addAll(nextMoves)
             }
 
-            //            println("Start: $start, End: $end, Impassable: $impassablePoints, Moves:
-            // $moves\n")
-
             return moves
         }
 
@@ -145,38 +139,33 @@ fun main() {
                 .map { moves -> moves.map { it.toPadCode() } + ENTER }
         }
 
-    fun part1() {
-        fun calculateDirectionsForCode(code: String): List<List<DirectionPadCode>> {
-            val isNumberCode = code.contains(Regex("[0-9]"))
-            val pad = if (isNumberCode) numpadReverse else directionPadReverse
-            val generateMovesForPad =
-                if (isNumberCode) ::generateMovesForNumpad else ::generateMovesForDirectionPad
+    fun calculateDirectionsForCode(code: String): List<List<DirectionPadCode>> {
+        val isNumberCode = code.contains(Regex("[0-9]"))
+        val pad = if (isNumberCode) numpadReverse else directionPadReverse
+        val generateMovesForPad =
+            if (isNumberCode) ::generateMovesForNumpad else ::generateMovesForDirectionPad
 
-            return ("A$code").zipWithNext().fold(listOf(emptyList())) {
-                previousMoves,
-                (startValue, endValue) ->
-                val start = pad.getValue(startValue)
-                val end = pad.getValue(endValue)
-                val validMoves = generateMovesForPad(start, end)
+        return ("A$code").zipWithNext().fold(listOf(emptyList())) {
+            previousMoves,
+            (startValue, endValue) ->
+            val start = pad.getValue(startValue)
+            val end = pad.getValue(endValue)
+            val validMoves = generateMovesForPad(start, end)
 
-                previousMoves.flatMap { previousMove -> validMoves.map { previousMove + it } }
-            }
+            previousMoves.flatMap { previousMove -> validMoves.map { previousMove + it } }
         }
+    }
 
+    fun part1() {
         codes
             .map { startCode ->
-                (0..3).fold(listOf(listOf(startCode))) { previousCodes, _ ->
-                    previousCodes
-                        .flatMap { code ->
-                            //                        code.println()
-                            calculateDirectionsForCode(code.last()).map {
-                                code + it.map { it.asChar() }.joinToString(separator = "")
-                            }
+                (0..2).fold(listOf(listOf(startCode))) { previousCodes, _ ->
+                    previousCodes.flatMap { code ->
+                        //                        code.println()
+                        calculateDirectionsForCode(code.last()).map {
+                            code + it.map { it.asChar() }.joinToString(separator = "")
                         }
-                        .filter { code ->
-                            val shortestLengthSoFar = code.minOf { code.last().length }
-                            code.last().length <= shortestLengthSoFar + 3
-                        }
+                    }
                 }
             }
             .map {
@@ -188,7 +177,39 @@ fun main() {
             .println()
     }
 
-    fun part2() {}
+    fun part2() {
+        // A directional code can be broken up into a series of moves starting from A, going to one
+        // or two of the four directions and pressing them and then back to A
+        // direction, and then going back to A
+        val hmCountLength = hashMapOf<Pair<String, Int>, Long>()
+
+        fun getEventualLengthOfCode(code: String, roundsRemaining: Int): Long =
+            hmCountLength.getOrPut(code to roundsRemaining) {
+                //                code.println()
+
+                if (roundsRemaining == 0) {
+                    return@getOrPut code.length.toLong()
+                }
+
+                calculateDirectionsForCode(code).minOf { possibleCode ->
+                    possibleCode
+                        .split { it == ENTER }
+                        .dropLast(1)
+                        .map {
+                            (it + ENTER).joinToString(separator = "") { it.asChar().toString() }
+                        }
+                        .sumOf { getEventualLengthOfCode(it, roundsRemaining - 1) }
+                }
+            }
+
+        codes
+            .map { it to getEventualLengthOfCode(it, 26) }
+            .sumOf { (code, length) ->
+                val startingCodeValue = code.dropLast(1).toLong()
+                length * startingCodeValue
+            }
+            .println()
+    }
 
     print("Part 1: ")
     part1()
