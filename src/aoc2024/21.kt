@@ -139,7 +139,7 @@ fun main() {
                 .map { moves -> moves.map { it.toPadCode() } + ENTER }
         }
 
-    fun calculateDirectionsForCode(code: String): List<List<DirectionPadCode>> {
+    fun possiblePathsForCode(code: String): List<List<DirectionPadCode>> {
         val isNumberCode = code.contains(Regex("[0-9]"))
         val pad = if (isNumberCode) numpadReverse else directionPadReverse
         val generateMovesForPad =
@@ -162,7 +162,7 @@ fun main() {
                 (0..2).fold(listOf(listOf(startCode))) { previousCodes, _ ->
                     previousCodes.flatMap { code ->
                         //                        code.println()
-                        calculateDirectionsForCode(code.last()).map {
+                        possiblePathsForCode(code.last()).map {
                             code + it.map { it.asChar() }.joinToString(separator = "")
                         }
                     }
@@ -180,18 +180,18 @@ fun main() {
     fun part2() {
         // A directional code can be broken up into a series of moves starting from A, going to one
         // or two of the four directions and pressing them and then back to A
-        // direction, and then going back to A
-        val hmCountLength = hashMapOf<Pair<String, Int>, Long>()
+        // direction, and then going back to A.
+        val hmCodeToEventualLength = hashMapOf<Pair<String, Int>, Long>()
 
         fun getEventualLengthOfCode(code: String, roundsRemaining: Int): Long =
-            hmCountLength.getOrPut(code to roundsRemaining) {
+            hmCodeToEventualLength.getOrPut(code to roundsRemaining) {
                 //                code.println()
 
                 if (roundsRemaining == 0) {
                     return@getOrPut code.length.toLong()
                 }
 
-                calculateDirectionsForCode(code).minOf { possibleCode ->
+                possiblePathsForCode(code).minOf { possibleCode ->
                     possibleCode
                         .split { it == ENTER }
                         .dropLast(1)
