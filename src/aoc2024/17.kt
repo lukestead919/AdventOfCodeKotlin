@@ -1,7 +1,6 @@
 package aoc2024
 
 import kotlin.math.pow
-import utils.iterate
 import utils.iterateUntilStable
 import utils.println
 
@@ -73,6 +72,8 @@ private data class Program(
         //            7 -> copy(c = multiplyFunction(), pointer = pointer + 2)
         //            else -> throw IllegalArgumentException("Invalid opcode $opcode")
         //        }
+
+        // I feel like this should work, no idea why it doesn't
         when (pointer) {
             0 -> {
                 return if (output.isEmpty()) {
@@ -82,7 +83,7 @@ private data class Program(
                 }
             }
             2 -> {
-                return if (b == a % 8) {
+                return if (b == (a % 8)) {
                     listOf(copy(pointer = 0, b = output.lastOrNull()?.toLong() ?: 0))
                 } else {
                     emptyList()
@@ -138,10 +139,28 @@ fun main() {
     }
 
     fun part2() {
-        program
-            .copy(a = 0, pointer = 14, output = program.program)
-            .let { program -> (0L..<256).map { program.copy(c = it) } }
-            .iterate(29) { it.flatMap { it.reverse() } }
+        //        program
+        //            .copy(a = 0, pointer = 14, output = program.program)
+        //            .let { program -> (0L..<256).map { program.copy(c = it) } }
+        //            .iterate(29) { it.flatMap { it.reverse() } }
+
+        fun findA(previousA: Long, output: List<Int>): List<Long> =
+            (0..7)
+                .filter {
+                    val a = (8 * previousA) + it
+                    val newProgram = program.copy(a = a)
+                    newProgram.iterateUntilStable { it.advance() }.output == output
+                }
+                .println()
+                .map { 8L * previousA + it }
+
+        (1..program.program.size)
+            .foldIndexed(listOf(0L)) { index, previousA, _ ->
+                val output = program.program.takeLast(index + 1)
+                val possibleAs = previousA.flatMap { findA(it, output) }
+                possibleAs
+            }
+            .min()
             .println()
     }
 
