@@ -29,23 +29,23 @@ fun main() {
     }
 
     fun part2() {
-        var nConnections = computers.flatMap { a -> graph[a]!!.map { b -> setOf(a, b) } }.toSet()
+        var groupsOfSizeN = computers.flatMap { a -> graph[a]!!.map { b -> setOf(a, b) } }.toSet()
 
         while (true) {
-            nConnections =
-                nConnections
-                    .flatMap { nConnection ->
+            groupsOfSizeN =
+                groupsOfSizeN
+                    .flatMap { group ->
                         val intersection =
-                            nConnection.fold(computers) { acc, computer ->
+                            group.fold(computers) { acc, computer ->
                                 acc.intersect(graph[computer]!!)
                             }
 
-                        intersection.map { nConnection + it }
+                        intersection.map { group + it }
                     }
                     .toSet()
 
-            if (nConnections.size <= 1) {
-                nConnections.first().toList().sorted().joinToString(",").println()
+            if (groupsOfSizeN.size <= 1) {
+                groupsOfSizeN.first().toList().sorted().joinToString(",").println()
                 break
             }
         }
