@@ -9,7 +9,7 @@ fun Long.mix(other: Long): Long = this xor other
 fun Long.prune(): Long = Math.floorMod(this, 16777216L)
 
 fun Long.nextSecret(): Long =
-    let { mix(64 * this).prune() }.let { it.mix(it / 32).prune() }.let { it.mix(it * 2048).prune() }
+    let { mix(64 * it).prune() }.let { it.mix(it / 32).prune() }.let { it.mix(it * 2048).prune() }
 
 fun main() {
     val secrets = read2024Input("22").map { it.toLong() }
