@@ -36,9 +36,11 @@ fun main() {
             }
 
         val sequences =
-            (-9..9).toList().combinations(3).flatMap { beginning ->
-                (1..9).map { end -> beginning + end }
-            }
+            (-9..9)
+                .toList()
+                .combinations(4)
+                .filter { it.sum() in 0..9 }
+                .filter { it.last() in 1..9 }
 
         sequences.maxOf { sequence -> secretMaps.sumOf { it.getOrDefault(sequence, 0) } }.println()
     }
